@@ -16,7 +16,7 @@ app.use(function(req,res,next){
 http.listen(8000,function(){
     console.log("Connected & Listen to port 8000");
 });
-//
+
 app.get('/users',function(req,res){
     var data = {
         "Data":""
@@ -36,11 +36,7 @@ app.get('/users',function(req,res){
 });
 
 app.post('/user',function(req,res){
-    console.log("..........................");
-    console.log(req.query);
-    console.log("..........................");
-    var username = req.query.username;
-
+     var username = req.query.username;
     var data = {
         "error":1,
         "Users":""
@@ -58,6 +54,28 @@ app.post('/user',function(req,res){
         });
     }else{
         data["Users"] = "Please provide required data (i.e : username)";
+        res.json(data);
+    }
+});
+
+app.delete('/user/:username',function(req,res){
+    var username = req.params.username;
+    var data = {
+        "error":1,
+        "Users":""
+    };
+    if(!!username){
+        db.collection('users').remove({username:username}, function(err, result) {
+            if(!!err){
+                data["Users"] = "Error deleting user";
+            }else{
+                data["error"] = 0;
+                data["Users"] = "Delete User Successfully";
+            }
+            res.json(data);
+        });
+    }else{
+        data["Users"] = "Please provide all required data (i.e : username )";
         res.json(data);
     }
 });
