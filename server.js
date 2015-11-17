@@ -34,3 +34,30 @@ app.get('/users',function(req,res){
         }
     });
 });
+
+app.post('/user',function(req,res){
+    console.log("..........................");
+    console.log(req.query);
+    console.log("..........................");
+    var username = req.query.username;
+
+    var data = {
+        "error":1,
+        "Users":""
+    };
+
+    if(!!username){
+        db.collection('users').insert({username:username}, function(err, result) {
+            if(!!err){
+                data["Users"] = "Error Adding data";
+            }else{
+                data["error"] = 0;
+                data["Users"] = "User Added Successfully";
+            }
+            res.json(data);
+        });
+    }else{
+        data["Users"] = "Please provide required data (i.e : username)";
+        res.json(data);
+    }
+});
